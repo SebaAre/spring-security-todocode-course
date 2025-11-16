@@ -37,6 +37,7 @@ public class AuthService {
         user.setUsername(request.username());
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setEnabled(true);
+        user.setEmail(request.email());
 
 
         Role userRole = roleRepository.findByName("USER")
