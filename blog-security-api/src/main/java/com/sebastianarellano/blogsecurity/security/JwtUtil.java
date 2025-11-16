@@ -7,13 +7,16 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import com.sebastianarellano.blogsecurity.entity.User;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
@@ -29,7 +32,7 @@ public class JwtUtil {
         return createToken(claims, userDetails.getUsername());
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
+    public String createToken(Map<String, Object> claims, String subject) {
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + expiration);
 
@@ -40,6 +43,19 @@ public class JwtUtil {
                 .setExpiration(expirationDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public String createToken(User user) {
+        Map<String, Object> extraClaims = new HashMap<>();
+
+        List<String> authorities = user.getRoles().stream()
+                .flatMap(role -> role.getPermissions().stream())
+                .map(permission -> permission.getName())
+                .collect(Collectors.toList());
+
+        extraClaims.put("authorities", authorities);
+
+        return createToken(extraClaims, user.getUsername());
     }
 
     private SecretKey getSigningKey() {
