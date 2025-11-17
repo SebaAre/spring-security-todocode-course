@@ -37,8 +37,17 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                                         Authentication authentication) throws IOException, ServletException {
 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        String email = oAuth2User.getAttribute("email");
+
+        String emailFromOAuth = oAuth2User.getAttribute("email");
         String name = oAuth2User.getAttribute("name");
+        String login = oAuth2User.getAttribute("login");
+
+        final String email;
+        if (emailFromOAuth == null || emailFromOAuth.isEmpty()) {
+            email = login + "@github.com";
+        } else {
+            email = emailFromOAuth;
+        }
 
         User user = userRepository.findByEmail(email)
                 .orElseGet(() -> {
