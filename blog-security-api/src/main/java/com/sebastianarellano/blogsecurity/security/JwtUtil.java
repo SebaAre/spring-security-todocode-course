@@ -1,5 +1,6 @@
 package com.sebastianarellano.blogsecurity.security;
 
+import com.sebastianarellano.blogsecurity.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -7,7 +8,6 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import com.sebastianarellano.blogsecurity.entity.User;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -47,6 +47,12 @@ public class JwtUtil {
 
     public String createToken(User user) {
         Map<String, Object> extraClaims = new HashMap<>();
+
+        List<String> roles = user.getRoles().stream()
+                .map(role -> role.getName())
+                .collect(Collectors.toList());
+
+        extraClaims.put("roles", roles);
 
         List<String> authorities = user.getRoles().stream()
                 .flatMap(role -> role.getPermissions().stream())
