@@ -56,7 +56,7 @@ REST API with JWT authentication, role-based authorization, OAuth2 integration (
    JWT_SECRET=your_secret_key
 ```
 
-3. Insert initial data (roles, permissions, author) - see SQL in `/docs`
+3. Insert initial data (roles, permissions, author) in your database with queries
 
 4. Run the application
 
