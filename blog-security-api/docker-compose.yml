@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_DB: blog_security
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -21,10 +21,10 @@ services:
     depends_on:
       - postgres
     environment:
-      DB_USERNAME: postgres
-      DB_PASSWORD: admin
-      JWT_SECRET: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-      JWT_EXPIRATION: 86400000
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
